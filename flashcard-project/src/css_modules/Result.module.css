@@ -1,0 +1,9 @@
+.CorrectResult {
+    color: green;
+    margin-right: 3px;
+}
+
+.IncorrectResult {
+    color: red;
+    margin-right: 3px;
+}
