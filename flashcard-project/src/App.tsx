@@ -15,7 +15,7 @@ function App() {
   const [finalMessage, setFinalMessage] = useState<boolean>(false)
   // gets CSRF token
   useToken() 
-  // gets the list of languages and grammar points that are displayed in the sidebar
+  // gets the list of languages and  points that are displayed in the sidebar
   const languagesListContent = useLanguagesListContent()
   //id of the grammar point as defined in backend.  Set by handleLanguageClick function that is passed to LanguagesList component.
   const [grammarPointId, setGrammarPointId] = useState<number|null>(null)
