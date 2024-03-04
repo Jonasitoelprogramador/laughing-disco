@@ -3,9 +3,9 @@ import { DisplayedContent, SentencesResponse } from "../interfaces"
 import axios from "axios";
 
 
-export const useDisplayedContent = (id: number | null, counter: number) => {
-    const [displayedContent, setDisplayedContent] = useState<DisplayedContent>();
-    const [error, setError] = useState<Error>();
+export const useDisplayedContent = (id: number | undefined, counter: number) => {
+    const [displayedContent, setDisplayedContent] = useState<DisplayedContent|null>();
+    const [errorMessage, setErrorMessage] = useState<string|null>();
     const isDisplayedContent = (obj: any): obj is DisplayedContent => {
         return 'sentences' in obj && Array.isArray(obj.sentences) &&
                'buttonValues' in obj && Array.isArray(obj.buttonValues);
@@ -50,9 +50,16 @@ export const useDisplayedContent = (id: number | null, counter: number) => {
                     });
                     const transformedData = transformSentences(response.data);
                     return transformedData;
-                } catch (error) {
-                    console.error("API Error:", error);
-                    throw error; 
+                // Axios interprets the Status Code 400 as an error and throws a JS object error
+                } catch (error: any) {
+                    if (error.response && error.response.data) {
+                        // Access custom error message from the server
+                        const customErrorMessage = error.response.data.error;
+                        throw  customErrorMessage
+                    }
+                    else {
+                        throw error.message
+                    }
                 }
             };
 
@@ -60,10 +67,10 @@ export const useDisplayedContent = (id: number | null, counter: number) => {
                 setDisplayedContent(transformedData);
             }).catch(error => {
                 console.error('Failed to fetch sentences:', error);
-                setError(error);
+                setErrorMessage(error);
             });
         }
     }, [counter]); // Dependency array ensures this effect runs when `id` changes
 
-    return { displayedContent, setDisplayedContent, error } ;
+    return { displayedContent, setDisplayedContent, errorMessage, setErrorMessage } ;
 }

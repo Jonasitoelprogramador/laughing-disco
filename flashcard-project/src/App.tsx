@@ -1,6 +1,6 @@
-import { Flex, Grid, GridItem } from '@chakra-ui/react'
+import { Grid, GridItem } from '@chakra-ui/react'
 
-import  DisplayCard from "./components/DisplayCard"
+import  DisplayCard, { InputWithIndex } from "./components/DisplayCard"
 import Title from "./components/Title"
 import LanguagesList from "./components/LanguagesList"
 
@@ -15,14 +15,18 @@ function App() {
   const [finalMessage, setFinalMessage] = useState<boolean>(false)
   // gets CSRF token
   useToken() 
-  // gets the list of languages and  points that are displayed in the sidebar
+  // gets the list of languages and points that are displayed in the sidebar
   const languagesListContent = useLanguagesListContent()
   //id of the grammar point as defined in backend.  Set by handleLanguageClick function that is passed to LanguagesList component.
-  const [grammarPointId, setGrammarPointId] = useState<number|null>(null)
+  const [grammarPointId, setGrammarPointId] = useState<number>()
   // used to in useDisplayedContent's dependency array to ensure consistent refreshes
   const [counter, setCounter] = useState<number>(0);
   // takes grammar point ID from LanguageList and passes to the API to get sentences and buton values.
-  const {displayedContent, setDisplayedContent, error} = useDisplayedContent(grammarPointId, counter)
+  const {displayedContent, setDisplayedContent, errorMessage, setErrorMessage} = useDisplayedContent(grammarPointId, counter)
+  // values and fragment index of the buttons that have been clicked. Set by handleButtonClick which is passed to InputButtonGroup.
+  const [selectedInputs, setSelectedInputs] = useState<InputWithIndex[]|null>();
+  // used to bring up correct sentence.  Used in handleNext.
+  const [pageIndex, setPageIndex] = useState<number>(0);
 
   //const [loading, setLoading] = useState(false);
 
@@ -33,45 +37,41 @@ function App() {
   // this is passed to LanguagesList in order to "raise the state" of the grammar point ID
   const handleLanguageClick = (pointId: number) => {
     setFinalMessage(false)
-    setDisplayedContent(undefined)
+    setDisplayedContent(null)
     setGrammarPointId(pointId);
     setCounter(prev => prev + 1);
+    setErrorMessage(null);
+    setSelectedInputs(null);
+    setPageIndex(0)
   }
-  
-  //useEffect(() => {
-    // When displayedContent changes, check if it's available and update loading accordingly
-  //  if (displayedContent) {
-  //    setLoading(false); // Set loading to false once displayedContent is available
-  //  }
-  //}, [displayedContent]);
 
   return (
     <>
       <Grid
       height={
-        "100%"
-      } 
+        "100vh"
+      }
+      width={
+        "100vw"
+      }
       templateAreas={{
-        base: `"head head"
-               "nav main"`
+        base: `"head"
+               "nav" 
+               "main"`
         //lg: `"nav nav" "aside main"`
       }}
-      templateColumns= {{
-        base: "250px 1fr" 
-        //lg: "250px 1fr" 
+      templateRows= {{
+        base: "100px 100px 1fr"  
       }}
-      
       >
-        <GridItem gridArea="head">
+        <GridItem gridArea="head" display="flex" alignItems="center" justifyContent="center" bgColor={'brand.blue'}>
           <Title></Title>
         </GridItem>
         <GridItem gridArea="nav">
           <LanguagesList languagesListContent={languagesListContent} handleLanguageClick={handleLanguageClick}></LanguagesList>
         </GridItem>
-        <GridItem gridArea="main">
-          <Flex justifyContent="center" alignItems="center" margin="20px">
-            <DisplayCard displayedContent={displayedContent && displayedContent} error={error && error} finalMessageTrue={finalMessageTrue} finalMessage={finalMessage}></DisplayCard>
-          </Flex>
+        <GridItem gridArea="main" display={'flex'} justifyContent="center" alignItems="center">
+            <DisplayCard displayedContent={displayedContent && displayedContent} errorMessage={errorMessage && errorMessage} finalMessageTrue={finalMessageTrue} finalMessage={finalMessage} selectedInputs={selectedInputs} setSelectedInputs={setSelectedInputs} pageIndex={pageIndex} setPageIndex={setPageIndex}></DisplayCard>
         </GridItem>
       </Grid>
     </>

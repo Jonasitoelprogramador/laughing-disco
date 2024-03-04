@@ -4,12 +4,13 @@ import {
   AccordionButton,
   AccordionPanel,
   AccordionIcon, 
-  Box,
-  Button
+  Button, 
+  Box
 }
  from '@chakra-ui/react' 
 
 import { Language } from '../interfaces'
+import Navbar from './Navbar';
 
 interface Props {
   handleLanguageClick: (selectedPoint: number) => void;
@@ -17,32 +18,11 @@ interface Props {
 }
 
 
-const LanguagesList = ({languagesListContent, handleLanguageClick}: Props) => {
+const LanguagesList = () => {
   return (
-    <Accordion defaultIndex={[0]} allowMultiple>
-      {
-      languagesListContent.map((item) => (
-      <AccordionItem>
-        <h2>
-          <AccordionButton>
-            <Box as="span" flex='1' textAlign='left'>
-              {item.language}
-            </Box>
-            <AccordionIcon />
-          </AccordionButton>
-        </h2>
-        {item.grammarPoints.map((p) => (
-        <AccordionPanel pb={4}>
-          <Button variant="link" onClick={() => handleLanguageClick(p.id)}>
-            {p.point}
-          </Button>
-          
-        </AccordionPanel>
-        ))}
-      </AccordionItem>
-      ))}
-    </Accordion>
+      <Navbar></Navbar>
   )
 }
 
 export default LanguagesList
+
