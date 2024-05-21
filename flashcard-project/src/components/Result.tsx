@@ -1,5 +1,5 @@
 import { Badge, Box } from '@chakra-ui/react';
-import { InputWithIndex } from "./DisplayCard";
+import { InputWithIndex } from '../interfaces';
 import styles from '../css_modules/Result.module.css'
 
 interface Props {
