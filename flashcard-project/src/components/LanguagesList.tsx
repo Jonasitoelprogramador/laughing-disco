@@ -1,26 +1,16 @@
-import { 
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon, 
-  Button, 
-  Box
-}
- from '@chakra-ui/react' 
-
 import { Language } from '../interfaces'
 import Navbar from './Navbar';
 
 interface Props {
-  handleLanguageClick: (selectedPoint: number) => void;
-  languagesListContent: Language[]
+  handleLanguageClick: (selectedPoint: number, selectedLanguage: Language) => void;
+  languagesListContent: Language[];
+  selectedLanguage: Language|undefined;
 }
 
 
-const LanguagesList = () => {
+const LanguagesList = ({languagesListContent, handleLanguageClick, selectedLanguage}: Props) => {
   return (
-      <Navbar></Navbar>
+      <Navbar languagesListContent={languagesListContent} handleLanguageClick={handleLanguageClick} selectedLanguage={selectedLanguage}></Navbar>
   )
 }
 

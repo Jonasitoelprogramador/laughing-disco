@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react'
-import { DisplayedContent, Sentence } from '../interfaces';
-import { InputWithIndex } from './DisplayCard';
+import { Sentence } from '../interfaces';
+import { InputWithIndex } from '../interfaces';
 import Result from './Result';
 import InputButtonGroup from './InputButtonGroup';
 
@@ -8,14 +8,14 @@ interface Props {
     displayedSentence: Sentence | undefined; 
     selectedInputs?: InputWithIndex[] | undefined | null;
     handleButtonClick: (input: string, fragmentIndex: number) => void;
-    displayedContent: DisplayedContent | undefined | null;
+    sentenceObjects: Sentence[] | undefined | null;
 }
 
-const InnerCard = ({displayedSentence, selectedInputs, handleButtonClick, displayedContent}: Props) => {
+const InnerCard = ({displayedSentence, selectedInputs, handleButtonClick, sentenceObjects}: Props) => {
     function renderComponent() {
-        if (displayedContent && displayedSentence) {
+        if (sentenceObjects && displayedSentence) {
             return (
-            <Box marginBottom={'120px'} fontSize={'40px'} lineHeight={'60px'}>
+            <Box marginBottom={'120px'} fontSize={{base: '20px', sm:'30px', md: '40px'}} lineHeight={{base: '35px', sm:'45px', md: '60px'}}>
             {displayedSentence?.fragments.map((fragment:string, fragmentIndex) => 
             fragmentIndex != displayedSentence?.fragments.length - 1 ?
             <>  
@@ -26,7 +26,7 @@ const InnerCard = ({displayedSentence, selectedInputs, handleButtonClick, displa
                 ? 
                 <Result selectedInputs={selectedInputs} index={fragmentIndex} result={selectedInputs[fragmentIndex].result}></Result> 
                 :
-                <InputButtonGroup handleButtonClick={handleButtonClick} buttonValues={displayedContent.buttonValues} fragmentIndex={fragmentIndex} selectedInputs={selectedInputs}></InputButtonGroup>}
+                <InputButtonGroup handleButtonClick={handleButtonClick} displayedSentence={displayedSentence} fragmentIndex={fragmentIndex} selectedInputs={selectedInputs}></InputButtonGroup>}
             </>
             :
             <>

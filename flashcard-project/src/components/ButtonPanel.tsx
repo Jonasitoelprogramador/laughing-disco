@@ -11,13 +11,22 @@ interface Props {
 }
 
 const ButtonPanel = ({finalMessage, handleSubmit, handleNext, handleSkip, checkSubmit}: Props) => {
+  
+  const buttonStyles = {
+    bgColor:'brand.yellow',
+    fontSize: { base: '20px', sm: '25px', md: '30px' }, // Responsive font size
+    _hover: { padding: '17px' },
+    _active: {shadow: 'none'},
+    shadow:'3px 3px #b2953e'
+  }
+  
   function renderComponent() {
     const submitted = checkSubmit()
     if (!finalMessage && !submitted) { 
-        return  <Button type="submit" onClick={() => handleSubmit()} shadow='3px 3px #b2953e' bgColor={'brand.yellow'} fontSize={'30px'}>Submit</Button>
+        return  <Button type="submit" onClick={() => handleSubmit()} {...buttonStyles}>Submit</Button>
     }
     else if (!finalMessage && submitted) {
-      return <Button onClick={() => handleNext()} shadow='3px 3px #b2953e' bgColor={'brand.yellow'} fontSize={'30px'}>Next</Button>
+      return <Button onClick={() => handleNext()} {...buttonStyles}>Next</Button>
     }
   }
   return (
@@ -27,7 +36,7 @@ const ButtonPanel = ({finalMessage, handleSubmit, handleNext, handleSkip, checkS
             {renderComponent()}
           </ButtonGroup>
       </Flex>
-      <Button position={'absolute'} bottom={'10px'} right={'10px'} onClick={() => handleSkip()} shadow='3px 3px #b2953e' bgColor={'brand.yellow'} fontSize={'30px'}>Skip<FontAwesomeIcon icon={faRightLong} size='sm'/></Button>
+      <Button position={'absolute'} bottom={'10px'} right={'10px'} onClick={() => handleSkip()} {...buttonStyles}>Skip<FontAwesomeIcon icon={faRightLong} size='sm'/></Button>
     </>
   )
 }

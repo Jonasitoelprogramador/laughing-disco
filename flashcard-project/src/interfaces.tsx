@@ -1,10 +1,16 @@
 
 
 export interface Sentence {
+    text: string;
     fragments: string[];
-    keywords: string[]; 
+    keywords: Keyword[]; 
 }
 
+export interface Keyword {
+    form: string;
+    verb: boolean;
+    contrastives: string[]
+}
 
 export interface GrammarInfo {
     item: string;
@@ -21,12 +27,13 @@ export interface GrammarPoint {
     point: string;
 }
 
-export interface DisplayedContent {
-    sentences: Sentence[];
-    buttonValues: string[];
+export interface ReceivedData {
+    1: Sentence[];
 }
 
-export interface SentencesResponse {
-    1: { [key: string]: any[] };
-    2: string[];
+
+export interface InputWithIndex {
+    input: string;
+    fragmentIndex: number;
+    result?: boolean;
 }

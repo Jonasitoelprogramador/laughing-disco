@@ -1,5 +1,5 @@
 import { Card, CardBody, Flex, Box } from '@chakra-ui/react'
-import { DisplayedContent, Sentence } from '../interfaces';
+import { InputWithIndex, Sentence } from '../interfaces';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import ButtonPanel from './ButtonPanel';
 import InnerCard from './InnerCard';
@@ -9,14 +9,8 @@ export interface Option {
     value: string;
   }
 
-export interface InputWithIndex {
-    input: string;
-    fragmentIndex: number;
-    result?: boolean;
-}
-
 interface Props {
-    displayedContent?: DisplayedContent|null;
+    sentenceObjects?: Sentence[]|null;
     errorMessage?: string | null;
     finalMessageTrue: () => void;
     setSelectedInputs: Dispatch<SetStateAction<InputWithIndex[] | null | undefined>>;
@@ -26,7 +20,7 @@ interface Props {
     pageIndex: number;
 }
 
-const displayedSentenceCard = ({displayedContent, errorMessage, finalMessageTrue, finalMessage, selectedInputs, setSelectedInputs, pageIndex, setPageIndex}: Props) => {
+const displayedSentenceCard = ({sentenceObjects, errorMessage, finalMessageTrue, finalMessage, selectedInputs, setSelectedInputs, pageIndex, setPageIndex}: Props) => {
   //the sentence currently being displayed on the forntend.  Set using an effect hook that uses the current index to slice the correct sentence.
   const [displayedSentence, setDisplayedSentence] = useState<Sentence>();
 
@@ -63,7 +57,7 @@ const displayedSentenceCard = ({displayedContent, errorMessage, finalMessageTrue
 
   const iteratePage = () => {
     // ...and iterated over all sentences, set finalMessage to true and reset index and selectedInputs
-    if (displayedContent && displayedContent.sentences.length - 1 <= pageIndex) {
+    if (sentenceObjects && sentenceObjects.length - 1 <= pageIndex) {
         finalMessageTrue();
         setPageIndex(0);
         setSelectedInputs([]);
@@ -84,7 +78,7 @@ const displayedSentenceCard = ({displayedContent, errorMessage, finalMessageTrue
         //You return the selectedInput element that has been spread as well as a boolean depending on if the keyword in question matches the input of the current selectedInput object.
         return {
           ...input,
-          result: input.input === keyword
+          result: input.input === keyword.form
         };
       });
       setSelectedInputs(updatedInputs);
@@ -98,7 +92,7 @@ const displayedSentenceCard = ({displayedContent, errorMessage, finalMessageTrue
     // ...this is to check that the submit has occured because if the submit doesn't happen, there will be no result property on the selectedInput elements
     const every = checkSubmit()
     // check setences isn't undefined incase this is run before sentences are displayed (this shouldn't happen anyway)
-    if (displayedContent?.sentences) {
+    if (sentenceObjects) {
         // if submit has occurred... 
         if (every) {
             iteratePage()
@@ -118,10 +112,10 @@ const displayedSentenceCard = ({displayedContent, errorMessage, finalMessageTrue
 
   // Used to get the requisite sentence from the sentences array.
   useEffect(() => {
-    if (displayedContent?.sentences && displayedContent.sentences.length > 0) {
-        displayedContent.sentences[pageIndex] && setDisplayedSentence(displayedContent.sentences[pageIndex]);
+    if (sentenceObjects && sentenceObjects.length > 0) {
+        sentenceObjects[pageIndex] && setDisplayedSentence(sentenceObjects[pageIndex]);
     }
-  }, [displayedContent, pageIndex]);
+  }, [sentenceObjects, pageIndex]);
   
   // logic that checks various parameters and returns different options
   function renderComponent() {
@@ -132,18 +126,18 @@ const displayedSentenceCard = ({displayedContent, errorMessage, finalMessageTrue
         return <Box>Error: {errorMessage}</Box>
     }
     // checks that displayedSentence and buttonValues are not undefined 
-    else if (displayedContent) {
+    else if (sentenceObjects) {
         return (
             <Box position={'relative'}>
-                <InnerCard displayedSentence={displayedSentence} selectedInputs={selectedInputs} handleButtonClick={handleButtonClick} displayedContent={displayedContent}></InnerCard>
+                <InnerCard displayedSentence={displayedSentence} selectedInputs={selectedInputs} handleButtonClick={handleButtonClick} sentenceObjects={sentenceObjects}></InnerCard>
                 <ButtonPanel finalMessage={finalMessage} handleNext={handleNext} handleSkip={handleSkip} handleSubmit={handleSubmit} checkSubmit={checkSubmit}></ButtonPanel>
             </Box>
         )
     }
     // if no error, no final message and displayedSentence but buttonValues are undefined return loading
-    else if (displayedContent === undefined) {
+    else if (sentenceObjects === undefined) {
         return <Flex justifyContent="center" alignItems="center" h={'100%'} position={'relative'}>
-                        Click a grammar point to get started!
+                  Click a grammar point to get started!
                 </Flex>
     }
     else {

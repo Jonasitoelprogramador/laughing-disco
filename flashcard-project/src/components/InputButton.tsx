@@ -10,21 +10,18 @@ interface Props {
 const InputButton = ({ option, fragmentIndex, isSelected, handleButtonClick }: Props) => {
     const buttonStyles = 
      {
-        _hover: {
-          paddingLeft: "11px",
-          paddingRight: "11px"
-        },
         border: '1px',
         borderColor: '#e3e6e4',
         paddingLeft: '10px',
         paddingRight: '10px',
         size: '2',
         textColor: isSelected ? "orange" : "brand.green",
-        shadow: isSelected ? "" : "3px 3px #949492"
+        shadow: isSelected ? "" : "3px 3px #949492",
+        _active: {shadow: 'none',},
     };
   
     return (
-        <Box display={'inline'} paddingLeft={'1px'} paddingRight={'1px'} _hover= {{paddingLeft: "0",paddingRight: "0"}}>
+        <Box display={'inline'} paddingLeft={'1px'} paddingRight={'1px'}>
             <Button {...buttonStyles} onClick={() => handleButtonClick(option, fragmentIndex)}>
                 {option}
             </Button>
