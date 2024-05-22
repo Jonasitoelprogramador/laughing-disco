@@ -4,7 +4,6 @@ import axios from "axios";
 
 
 export const useSentenceObjects = (id: number | undefined, counter: number) => {
-    console.log("useSentenceObjects")
     const [sentenceObjects, setSentenceObjects] = useState<Sentence[]|null>();
     const [errorMessage, setErrorMessage] = useState<string|null>();
     
@@ -56,7 +55,7 @@ export const useSentenceObjects = (id: number | undefined, counter: number) => {
                 axios.defaults.xsrfHeaderName = "X-CSRFToken"
                 axios.defaults.withCredentials = true;
                 try {
-                    const response = await axios.post('http://127.0.0.1:8000/', id, {
+                    const response = await axios.post('https://flashcards-backend-ff2b7ae149b6.herokuapp.com/', id, {
                         headers: {
                             'X-CSRFToken': csrfToken,
                         }
