@@ -7,7 +7,7 @@ export const useLanguagesListContent = (): Language[] => {
     
     // This could be in your main App component or similar
     useEffect(() => {
-        axios.get('https://flashcards-backend-ff2b7ae149b6.herokuapp.com/get-languages-content')
+        axios.get('https://flashcards-backend-ff2b7ae149b6.herokuapp.com/get-languages-content/')
         .then(response => {
             setLanguages(response.data[1])
         })

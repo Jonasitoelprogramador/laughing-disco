@@ -5,7 +5,7 @@ export const useToken = () => {
 
     // This could be in your main App component or similar
     useEffect(() => {
-        axios.get('http://localhost:8000/get-csrf-token', { withCredentials: true })
+        axios.get('https://flashcards-backend-ff2b7ae149b6.herokuapp.com/get-csrf-token/', { withCredentials: true })
         .then(response => {
             // CSRF token is now set as a cookie
             return response
