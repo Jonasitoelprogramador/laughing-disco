@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import axios from "axios";
 import { Language } from '../interfaces';
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 export const useLanguagesListContent = (): Language[] => {
     const [languages, setLanguages] = useState<Language[]>([]);
     
     // This could be in your main App component or similar
     useEffect(() => {
-        axios.get('https://flashcards-backend-ff2b7ae149b6.herokuapp.com/get-languages-content/')
+        axios.get(`${backendUrl}/get-languages-content/`)
         .then(response => {
             setLanguages(response.data[1])
         })

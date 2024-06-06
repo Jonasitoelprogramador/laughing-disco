@@ -137,11 +137,11 @@ const displayedSentenceCard = ({sentenceObjects, errorMessage, finalMessageTrue,
     // if no error, no final message and displayedSentence but buttonValues are undefined return loading
     else if (sentenceObjects === undefined) {
         return <Flex justifyContent="center" alignItems="center" h={'100%'} position={'relative'}>
-                  Click a grammar point to get started!
+                  Select a language to get started!
                 </Flex>
     }
     else {
-        return <Box>Loading...</Box>
+        return <Box>Loading - this may take up to 30 seconds as we are processing a lot of data!</Box>
     }
   }
 

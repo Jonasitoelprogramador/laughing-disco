@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Sentence, Keyword  } from "../interfaces"
 import axios from "axios";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 
 export const useSentenceObjects = (id: number | undefined, counter: number) => {
@@ -22,7 +23,6 @@ export const useSentenceObjects = (id: number | undefined, counter: number) => {
 
     function processSentence(sentence: Sentence): Sentence {
             if (isValidSentence(sentence)) {
-                console.log("Valid sentence processed:", sentence.text);
                 return sentence
             } else {
                 console.error("Invalid Sentence object structure:", sentence);
@@ -33,13 +33,16 @@ export const useSentenceObjects = (id: number | undefined, counter: number) => {
     
     useEffect(() => {
         if (id) {
-            const transformSentences = (receivedData: string): Sentence[] => {
-                const parsedData = JSON.parse(receivedData) as Sentence[];   
-                const validatedObjArray: Sentence[] = []
-                parsedData.map((sentence: Sentence) => validatedObjArray.push(processSentence(sentence)));
-                //parsedData.map((sentence_object: Sentence) => isValidSentence(sentence_object))
-                //console.log(`sentenceObjArray: ${sentenceObjArray}`)
-                return parsedData
+            
+            const transformSentences = (receivedData: string): Sentence[]|null => {
+                try{
+                    const parsedData = JSON.parse(receivedData) as Sentence[];   
+                    const validatedObjArray: Sentence[] = []
+                    parsedData.map((sentence: Sentence) => validatedObjArray.push(processSentence(sentence)));
+                    return parsedData
+                }   catch (error: any) {
+                    return null
+                }
             }
 
             const fetchSentences = async () => {
@@ -55,7 +58,7 @@ export const useSentenceObjects = (id: number | undefined, counter: number) => {
                 axios.defaults.xsrfHeaderName = "X-CSRFToken"
                 axios.defaults.withCredentials = true;
                 try {
-                    const response = await axios.post('https://flashcards-backend-ff2b7ae149b6.herokuapp.com/', id, {
+                    const response = await axios.post(backendUrl, id, {
                         headers: {
                             'X-CSRFToken': csrfToken,
                         }
@@ -76,7 +79,12 @@ export const useSentenceObjects = (id: number | undefined, counter: number) => {
             };
 
             fetchSentences().then(transformedData => {
-                setSentenceObjects(transformedData);
+                if (transformedData) {
+                    setSentenceObjects(transformedData);
+                } else {
+                    ;
+                }
+
             }).catch(error => {
                 console.error('Failed to fetch sentences:', error);
                 setErrorMessage(error);

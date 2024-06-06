@@ -48,7 +48,6 @@ function App() {
     setPageIndex(0)
     setSelectedLanguage(language)
   }
-  console.log(selectedLanguage)
 
   return (
     <>
